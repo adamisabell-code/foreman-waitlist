@@ -1,0 +1,637 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Foreman — Early Access Waitlist</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Barlow:wght@400;500;600;700&family=Barlow+Condensed:wght@600;700;900&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+  :root {
+    --orange: #ff6b00;
+    --orange-dark: #cc5500;
+    --orange-light: #ff8c33;
+    --black: #080808;
+    --navy: #0a0e18;
+    --navy-card: #0f1520;
+    --navy-border: #1c2640;
+    --white: #f5f0ea;
+    --gray: #1a1a1a;
+  }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--navy);
+    color: var(--white);
+    font-family: 'Barlow', sans-serif;
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  /* ── NOISE TEXTURE OVERLAY ── */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+    pointer-events: none;
+    z-index: 0;
+    opacity: 0.6;
+  }
+
+  /* ── HERO SECTION ── */
+  .hero {
+    position: relative;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 40px 24px 60px;
+    overflow: hidden;
+  }
+
+  /* Big orange glow behind everything */
+  .hero::after {
+    content: '';
+    position: absolute;
+    top: -20%;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 800px;
+    height: 800px;
+    background: radial-gradient(circle, rgba(255,107,0,0.25) 0%, rgba(255,107,0,0.05) 50%, transparent 70%);
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  /* Diagonal stripe texture */
+  .hero-stripes {
+    position: absolute;
+    inset: 0;
+    background: repeating-linear-gradient(
+      -45deg,
+      transparent,
+      transparent 60px,
+      rgba(255,107,0,0.015) 60px,
+      rgba(255,107,0,0.015) 61px
+    );
+    pointer-events: none;
+  }
+
+  .hero-content {
+    position: relative;
+    z-index: 1;
+    text-align: center;
+    max-width: 640px;
+    width: 100%;
+  }
+
+  /* Badge */
+  .badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: rgba(255,107,0,0.1);
+    border: 1px solid rgba(255,107,0,0.3);
+    border-radius: 100px;
+    padding: 6px 16px;
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 2px;
+    color: var(--orange);
+    text-transform: uppercase;
+    margin-bottom: 32px;
+    animation: fadeUp 0.6s ease both;
+  }
+
+  .badge-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--orange);
+    animation: pulse 2s infinite;
+  }
+
+  @keyframes pulse {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.5; transform: scale(0.8); }
+  }
+
+  /* Main headline */
+  .headline {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(80px, 20vw, 160px);
+    line-height: 0.9;
+    letter-spacing: 4px;
+    color: var(--orange);
+    margin-bottom: 8px;
+    animation: fadeUp 0.6s 0.1s ease both;
+  }
+
+  .subheadline {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: clamp(18px, 4vw, 26px);
+    font-weight: 600;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: rgba(245,240,234,0.5);
+    margin-bottom: 32px;
+    animation: fadeUp 0.6s 0.2s ease both;
+  }
+
+  /* Description */
+  .description {
+    font-size: 17px;
+    line-height: 1.7;
+    color: rgba(245,240,234,0.7);
+    max-width: 480px;
+    margin: 0 auto 48px;
+    animation: fadeUp 0.6s 0.3s ease both;
+  }
+
+  .description strong {
+    color: var(--white);
+    font-weight: 700;
+  }
+
+  /* Form */
+  .form-wrap {
+    background: rgba(15,21,32,0.8);
+    border: 1px solid rgba(255,107,0,0.25);
+    border-radius: 20px;
+    padding: 36px 32px;
+    backdrop-filter: blur(10px);
+    animation: fadeUp 0.6s 0.4s ease both;
+    text-align: left;
+  }
+
+  .form-title {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 2px;
+    color: var(--orange);
+    text-transform: uppercase;
+    margin-bottom: 20px;
+  }
+
+  .form-group {
+    margin-bottom: 14px;
+  }
+
+  .form-group label {
+    display: block;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 1.5px;
+    color: rgba(245,240,234,0.5);
+    text-transform: uppercase;
+    margin-bottom: 6px;
+  }
+
+  .form-group input,
+  .form-group select {
+    width: 100%;
+    background: var(--navy-card);
+    border: 1px solid var(--navy-border);
+    border-radius: 10px;
+    padding: 14px 16px;
+    font-family: 'Barlow', sans-serif;
+    font-size: 15px;
+    color: var(--white);
+    outline: none;
+    transition: border-color 0.2s, background 0.2s;
+    -webkit-appearance: none;
+  }
+
+  .form-group select {
+    cursor: pointer;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%23ff6b00' d='M6 8L1 3h10z'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 16px center;
+    background-color: var(--navy-card);
+    padding-right: 40px;
+  }
+
+  .form-group select option {
+    background: #1a1a1a;
+    color: var(--white);
+  }
+
+  .form-group input:focus,
+  .form-group select:focus {
+    border-color: var(--orange);
+    background: rgba(255,107,0,0.06);
+  }
+
+  .form-group input::placeholder {
+    color: rgba(245,240,234,0.25);
+  }
+
+  .submit-btn {
+    width: 100%;
+    background: var(--orange);
+    color: #fff;
+    border: none;
+    border-radius: 12px;
+    padding: 18px;
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 18px;
+    font-weight: 900;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    cursor: pointer;
+    margin-top: 8px;
+    transition: background 0.2s, transform 0.1s;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .submit-btn::before {
+    content: '';
+    position: absolute;
+    top: 0; left: -100%;
+    width: 100%; height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.1), transparent);
+    transition: left 0.4s;
+  }
+
+  .submit-btn:hover { background: var(--orange-light); transform: translateY(-1px); }
+  .submit-btn:hover::before { left: 100%; }
+  .submit-btn:active { transform: translateY(0); }
+
+  .form-note {
+    text-align: center;
+    font-size: 12px;
+    color: rgba(245,240,234,0.3);
+    margin-top: 14px;
+    letter-spacing: 0.5px;
+  }
+
+  /* Success state */
+  .success-state {
+    display: none;
+    text-align: center;
+    padding: 20px 0;
+  }
+
+  .success-icon {
+    font-size: 48px;
+    margin-bottom: 16px;
+  }
+
+  .success-title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 42px;
+    color: var(--orange);
+    letter-spacing: 2px;
+    margin-bottom: 8px;
+  }
+
+  .success-text {
+    font-size: 15px;
+    color: rgba(245,240,234,0.6);
+    line-height: 1.6;
+  }
+
+  /* ── FEATURES STRIP ── */
+  .features {
+    position: relative;
+    z-index: 1;
+    border-top: 1px solid rgba(255,107,0,0.15);
+    padding: 60px 24px;
+    max-width: 900px;
+    margin: 0 auto;
+  }
+
+  .features-label {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 3px;
+    color: var(--orange);
+    text-transform: uppercase;
+    text-align: center;
+    margin-bottom: 40px;
+  }
+
+  .features-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 24px;
+  }
+
+  .feature-card {
+    background: var(--navy-card);
+    border: 1px solid var(--navy-border);
+    border-radius: 16px;
+    padding: 24px 20px;
+    opacity: 0;
+    transform: translateY(20px);
+    transition: opacity 0.5s, transform 0.5s;
+  }
+
+  .feature-card.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  .feature-card:hover {
+    border-color: rgba(255,107,0,0.3);
+    background: rgba(255,107,0,0.06);
+  }
+
+  .feature-icon {
+    font-size: 28px;
+    margin-bottom: 12px;
+  }
+
+  .feature-title {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 16px;
+    font-weight: 800;
+    color: var(--white);
+    letter-spacing: 0.5px;
+    margin-bottom: 6px;
+    text-transform: uppercase;
+  }
+
+  .feature-desc {
+    font-size: 13px;
+    color: rgba(245,240,234,0.45);
+    line-height: 1.6;
+  }
+
+  /* ── FOOTER ── */
+  .footer {
+    text-align: center;
+    padding: 32px 24px 48px;
+    background: var(--navy-card);
+    border-top: 1px solid var(--navy-border);
+  }
+
+  .footer-logo {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 24px;
+    color: var(--orange);
+    letter-spacing: 4px;
+    margin-bottom: 8px;
+  }
+
+  .footer-text {
+    font-size: 12px;
+    color: rgba(245,240,234,0.2);
+    letter-spacing: 1px;
+  }
+
+  /* ── ANIMATIONS ── */
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(24px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  /* ── ORANGE TICKER TAPE ── */
+  .ticker {
+    background: var(--orange);
+    padding: 10px 0;
+    overflow: hidden;
+    white-space: nowrap;
+    position: relative;
+  }
+
+  .ticker-inner {
+    display: inline-block;
+    animation: ticker 20s linear infinite;
+  }
+
+  .ticker-item {
+    display: inline-block;
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 13px;
+    font-weight: 800;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: #fff;
+    padding: 0 32px;
+  }
+
+  .ticker-item::after {
+    content: '🦞';
+    margin-left: 32px;
+  }
+
+  @keyframes ticker {
+    0% { transform: translateX(0); }
+    100% { transform: translateX(-50%); }
+  }
+
+  @media (max-width: 480px) {
+    .form-wrap { padding: 24px 20px; }
+    .features-grid { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<!-- Ticker tape -->
+<div class="ticker">
+  <div class="ticker-inner">
+    <span class="ticker-item">Foreman is coming</span>
+    <span class="ticker-item">Blue collar AI</span>
+    <span class="ticker-item">Built for the field</span>
+    <span class="ticker-item">Get early access</span>
+    <span class="ticker-item">Foreman is coming</span>
+    <span class="ticker-item">Blue collar AI</span>
+    <span class="ticker-item">Built for the field</span>
+    <span class="ticker-item">Get early access</span>
+    <span class="ticker-item">Foreman is coming</span>
+    <span class="ticker-item">Blue collar AI</span>
+    <span class="ticker-item">Built for the field</span>
+    <span class="ticker-item">Get early access</span>
+  </div>
+</div>
+
+<!-- Hero -->
+<section class="hero">
+  <div class="hero-stripes"></div>
+  <div class="hero-content">
+
+    <div class="badge">
+      <div class="badge-dot"></div>
+      Now accepting early access
+    </div>
+
+    <h1 class="headline">FOREMAN</h1>
+    <p class="subheadline">AI built for the trades</p>
+
+    <p class="description">
+      The first AI agent built specifically for <strong>home service business owners.</strong>
+      Follow-ups, lead tracking, quotes, invoices, and job site analysis — all from your phone.
+      <strong>Built for the guy who's too busy running jobs to run his business.</strong>
+    </p>
+
+    <!-- Form -->
+    <div class="form-wrap" id="form-wrap">
+      <p class="form-title">Join the waitlist</p>
+
+      <div id="signup-form">
+        <div class="form-group">
+          <label>Your Name</label>
+          <input type="text" id="name" placeholder="First name" autocomplete="given-name" />
+        </div>
+        <div class="form-group">
+          <label>Email Address</label>
+          <input type="email" id="email" placeholder="you@company.com" autocomplete="email" />
+        </div>
+        <div class="form-group">
+          <label>Your Trade</label>
+          <select id="trade">
+            <option value="" disabled selected>What kind of work do you do?</option>
+            <option>Roofing</option>
+            <option>HVAC</option>
+            <option>Plumbing</option>
+            <option>Electrical</option>
+            <option>Concrete</option>
+            <option>Landscaping</option>
+            <option>Painting</option>
+            <option>Fencing</option>
+            <option>Sport Courts</option>
+            <option>Pool & Spa</option>
+            <option>General Contractor</option>
+            <option>Handyman</option>
+            <option>House Cleaning</option>
+            <option>Other</option>
+          </select>
+        </div>
+        <button class="submit-btn" onclick="handleSubmit()">JOIN THE WAITLIST →</button>
+        <p class="form-note">No spam. No credit card. Just early access.</p>
+      </div>
+
+      <div class="success-state" id="success-state">
+        <div class="success-icon">🦞</div>
+        <div class="success-title">You're in.</div>
+        <p class="success-text">
+          Foreman has your info.<br>
+          We'll reach out when early access opens.<br><br>
+          <strong style="color: var(--orange)">Follow @adamsforeman on TikTok</strong><br>
+          to watch it get built in real time.
+        </p>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- Features -->
+<section class="features">
+  <p class="features-label">What Foreman does for you</p>
+  <div class="features-grid">
+    <div class="feature-card">
+      <div class="feature-icon">⚡</div>
+      <div class="feature-title">Auto Follow-Ups</div>
+      <p class="feature-desc">New lead comes in, Foreman texts them instantly. No more leads going cold while you're on a job.</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">📋</div>
+      <div class="feature-title">AI Quote Builder</div>
+      <p class="feature-desc">Enter the job details, get a professional quote in seconds. Ready to send from your phone.</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">📅</div>
+      <div class="feature-title">Schedule Appointments</div>
+      <p class="feature-desc">Pick your available time slots, Foreman writes the message and sends it automatically — text, email, or both.</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">🎯</div>
+      <div class="feature-title">Lead Command Center</div>
+      <p class="feature-desc">Call, text, email, invoice — everything you need to close a job, right inside the lead card.</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">🎬</div>
+      <div class="feature-title">Content Scripts</div>
+      <p class="feature-desc">30-second scripts for social media written for your business. Show the real side of running a trades operation.</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">💬</div>
+      <div class="feature-title">Ask Foreman</div>
+      <p class="feature-desc">A business advisor in your pocket. Pricing, hiring, customers — Foreman knows your business inside out.</p>
+    </div>
+  </div>
+</section>
+
+<!-- Footer -->
+<div class="ticker" style="opacity: 0.6;">
+  <div class="ticker-inner">
+    <span class="ticker-item">Foreman is coming</span>
+    <span class="ticker-item">Blue collar AI</span>
+    <span class="ticker-item">Built for the field</span>
+    <span class="ticker-item">Get early access</span>
+    <span class="ticker-item">Foreman is coming</span>
+    <span class="ticker-item">Blue collar AI</span>
+    <span class="ticker-item">Built for the field</span>
+    <span class="ticker-item">Get early access</span>
+  </div>
+</div>
+
+<footer class="footer">
+  <div class="footer-logo">FOREMAN</div>
+  <p class="footer-text">© 2026 Foreman · Blue collar AI for the trades</p>
+</footer>
+
+<script>
+  // Scroll animations for feature cards
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach((entry, i) => {
+      if (entry.isIntersecting) {
+        setTimeout(() => entry.target.classList.add('visible'), i * 80);
+      }
+    });
+  }, { threshold: 0.1 });
+
+  document.querySelectorAll('.feature-card').forEach(card => observer.observe(card));
+
+  async function handleSubmit() {
+    const name = document.getElementById('name').value.trim();
+    const email = document.getElementById('email').value.trim();
+    const trade = document.getElementById('trade').value;
+    const btn = document.querySelector('.submit-btn');
+
+    if (!name || !email || !trade) {
+      alert('Please fill in all fields to join the waitlist.');
+      return;
+    }
+
+    if (!email.includes('@')) {
+      alert('Please enter a valid email address.');
+      return;
+    }
+
+    btn.textContent = 'SENDING...';
+    btn.disabled = true;
+
+    try {
+      await fetch('/.netlify/functions/subscribe', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ name, email, trade }),
+      });
+    } catch (e) {
+      console.log('Function error:', e);
+    }
+
+    document.getElementById('signup-form').style.display = 'none';
+    document.getElementById('success-state').style.display = 'block';
+  }
+
+    // Enter key submits form
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter') handleSubmit();
+  });
+</script>
+</body>
+</html>
