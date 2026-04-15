@@ -9,6 +9,26 @@ exports.handler = async function(event) {
     return { statusCode: 400, body: JSON.stringify({ error: 'Missing fields' }) };
   }
 
+  const SUPABASE_URL = 'https://bftcmopnpuyzuguiqfmv.supabase.co';
+  const SUPABASE_KEY = 'sb_publishable_DxPdD9lDGyc7DExcC6aCQg_L8csFIWL';
+
+  // Save to Supabase waitlist table
+  try {
+    await fetch(SUPABASE_URL + '/rest/v1/waitlist', {
+      method: 'POST',
+      headers: {
+        'apikey': SUPABASE_KEY,
+        'Authorization': 'Bearer ' + SUPABASE_KEY,
+        'Content-Type': 'application/json',
+        'Prefer': 'return=minimal',
+      },
+      body: JSON.stringify({ name, email, trade, signed_up_at: new Date().toISOString() }),
+    });
+  } catch (e) {
+    console.log('Supabase save error:', e);
+  }
+
+  // Send welcome email via Resend
   const emailHtml = `
     <!DOCTYPE html>
     <html>
@@ -68,8 +88,6 @@ exports.handler = async function(event) {
         html: emailHtml,
       }),
     });
-
-    const data = await res.json();
 
     return {
       statusCode: 200,
